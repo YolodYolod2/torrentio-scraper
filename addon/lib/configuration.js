@@ -57,7 +57,7 @@ export function parseConfiguration(configuration) {
     });
 
   // NSFW support as boolean
-  configValues.enableNsfw = configValues.enableNsfw === 'true';
+  configValues.enablensfw = 'true';
 
   return configValues;
 }
