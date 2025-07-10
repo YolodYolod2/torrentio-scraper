@@ -31,23 +31,34 @@ const keysToUppercase = [SizeFilter.key];
 
 export function parseConfiguration(configuration) {
   if (!configuration) {
-    return undefined;
+    return {};
   }
+
   if (PreConfigurations[configuration]) {
-    return PreConfigurations[configuration].config;
+    const config = { ...PreConfigurations[configuration].config };
+    config.enableNsfw = true; // Always enable NSFW for preconfigured ones
+    return config;
   }
+
   const configValues = configuration.split('|')
-      .reduce((map, next) => {
-        const parameterParts = next.split('=');
-        if (parameterParts.length === 2) {
-          map[parameterParts[0].toLowerCase()] = parameterParts[1];
-        }
-        return map;
-      }, {});
+    .reduce((map, next) => {
+      const parameterParts = next.split('=');
+      if (parameterParts.length === 2) {
+        map[parameterParts[0].toLowerCase()] = parameterParts[1];
+      }
+      return map;
+    }, {});
+
   keysToSplit
-      .filter(key => configValues[key])
-      .forEach(key => configValues[key] = configValues[key].split(',')
-          .map(value => keysToUppercase.includes(key) ? value.toUpperCase() : value.toLowerCase()))
+    .filter(key => configValues[key])
+    .forEach(key => {
+      configValues[key] = configValues[key].split(',')
+        .map(value => keysToUppercase.includes(key) ? value.toUpperCase() : value.toLowerCase());
+    });
+
+  // NSFW support as boolean
+  configValues.enableNsfw = configValues.enableNsfw === 'true';
+
   return configValues;
 }
 
