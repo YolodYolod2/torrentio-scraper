@@ -5,7 +5,6 @@
   "type": "module",
   "scripts": {
     "start": "node server.js"
-    "start": "node index.js"
   },
   "author": "TheBeastLT <pauliox@beyond.lt>",
   "license": "MIT",
