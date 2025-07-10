@@ -113,7 +113,11 @@ router.get(
 
 export default function (req, res) {
   router(req, res, function () {
-    res.statusCode = 404;
-    res.end();
+    if (res) {
+      res.statusCode = 404;
+      res.end();
+    } else {
+      console.error("❌ Response object was undefined in final handler");
+    }
   });
-};
+}
