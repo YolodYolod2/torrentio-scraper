@@ -11,7 +11,13 @@ if (!DATABASE_URI) {
 
 const database = new Sequelize(DATABASE_URI, {
   logging: console.log,
-  pool: { max: 30, min: 5, idle: 20 * 60 * 1000 }
+  pool: { max: 30, min: 5, idle: 20 * 60 * 1000 },
+  dialectOptions: {
+    ssl: {
+      require: true,
+      rejectUnauthorized: false
+    }
+  }
 });
 
 database.authenticate()
