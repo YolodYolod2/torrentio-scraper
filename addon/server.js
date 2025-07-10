@@ -1,12 +1,12 @@
 import express from 'express';
-import { run } from './serverless.js';
+import handler from './serverless.js';
 
 const app = express();
 const port = process.env.PORT || 7000;
 
 app.use(async (req, res) => {
   try {
-    const result = await run(req);
+    const result = await handler(req);
     res
       .status(result.statusCode || 200)
       .set(result.headers || {})
