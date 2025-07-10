@@ -3,7 +3,16 @@ const Op = Sequelize.Op;
 
 const DATABASE_URI = process.env.DATABASE_URI;
 
-const database = new Sequelize(DATABASE_URI, { logging: false, pool: { max: 30, min: 5, idle: 20 * 60 * 1000 } });
+console.log("⛳ DATABASE_URI received:", DATABASE_URI);  // DEBUG LOG
+
+if (!DATABASE_URI) {
+  throw new Error("❌ DATABASE_URI is undefined! Make sure it's set in Render env variables.");
+}
+
+const database = new Sequelize(DATABASE_URI, {
+  logging: false,
+  pool: { max: 30, min: 5, idle: 20 * 60 * 1000 }
+});
 
 const Torrent = database.define('torrent',
     {
