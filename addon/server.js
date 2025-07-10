@@ -1,22 +1,25 @@
-import express from 'express';
+import http from 'http';
 import handler from './serverless.js';
 
-const app = express();
-const port = process.env.PORT || 7000;
+const port = process.env.PORT || 10000;
 
-app.use(async (req, res) => {
-  try {
-    const result = await handler(req);
-    res
-      .status(result.statusCode || 200)
-      .set(result.headers || {})
-      .send(result.body || '');
-  } catch (err) {
-    console.error('❌ Error in server:', err);
-    res.status(500).send('Internal Server Error');
-  }
-});
-
-app.listen(port, () => {
-  console.log(`📡 Torrentio addon server running at http://localhost:${port}`);
-});
+http
+  .createServer((req, res) => {
+    try {
+      if (typeof handler === 'function') {
+        handler(req, res);
+      } else {
+        res.statusCode = 500;
+        res.end('Handler not a function');
+      }
+    } catch (err) {
+      console.error('❌ Error in server:', err);
+      if (res && typeof res.writeHead === 'function') {
+        res.writeHead(500);
+        res.end('Internal server error');
+      }
+    }
+  })
+  .listen(port, () => {
+    console.log(`📡 Torrentio addon server running at http://localhost:${port}/`);
+  });
