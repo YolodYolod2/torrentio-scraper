@@ -2,17 +2,24 @@ import { Sequelize } from 'sequelize';
 const Op = Sequelize.Op;
 
 const DATABASE_URI = process.env.DATABASE_URI;
-
-console.log("⛳ DATABASE_URI received:", DATABASE_URI);  // DEBUG LOG
+console.log('⛳ DATABASE_URI received:', DATABASE_URI);
 
 if (!DATABASE_URI) {
-  throw new Error("❌ DATABASE_URI is undefined! Make sure it's set in Render env variables.");
+  console.error('❌ DATABASE_URI not provided!');
+  process.exit(1);
 }
 
 const database = new Sequelize(DATABASE_URI, {
-  logging: false,
+  logging: console.log,
   pool: { max: 30, min: 5, idle: 20 * 60 * 1000 }
 });
+
+database.authenticate()
+  .then(() => console.log('✅ DB connection established.'))
+  .catch(err => {
+    console.error('❌ Failed to connect to DB:', err);
+    process.exit(1);
+  });
 
 const Torrent = database.define('torrent',
     {
