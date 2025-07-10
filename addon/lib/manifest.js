@@ -21,7 +21,8 @@ export function manifest(config = {}) {
     logo: `${config.host}/images/logo_v1.png`,
     behaviorHints: {
       configurable: true,
-      configurationRequired: false
+      configurationRequired: false,
+      nsfwSupported: true
     }
   };
   return Object.assign(baseManifest, overrideManifest);
